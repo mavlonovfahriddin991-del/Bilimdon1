@@ -47,7 +47,7 @@ Quyidagi qoidalarga qat'iy amal qiling:
 6. Agar bola xato so'z yozsa yoki noto'g'ri hisoblasa ham uni aslo urishmang, "hechqisi yo'q, sen juda aqllisan, yana bir bor birgalikda urinib ko'ramiz!" deb dalda bering.`;
 
 async function getGroqReply(message: string, history: any[]): Promise<string | null> {
-  const groqKey = process.env.GROQ_API_KEY || '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';
+  const groqKey = process.env.GROQ_API_KEY;
   if (!groqKey) return null;
 
   try {
