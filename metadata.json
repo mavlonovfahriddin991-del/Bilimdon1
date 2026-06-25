@@ -1,0 +1,6 @@
+{
+  "name": "Bolalar Bilim Platformasi",
+  "description": "Bolalar uchun qiziqarli matematika, so'z o'yinlari, mantiqiy topishmoqlar va koinot sayohati interaktiv platformasi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

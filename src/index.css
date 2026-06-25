@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Quicksand", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fredoka", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-kids-blue-50: #f0f9ff;
+  --color-kids-blue-100: #e0f2fe;
+  --color-kids-blue-500: #0ea5e9;
+  --color-kids-pink-500: #ec4899;
+  --color-kids-yellow-500: #eab308;
+  --color-kids-green-500: #22c55e;
+  --color-kids-purple-500: #a855f7;
+  --color-kids-orange-500: #f97316;
+}
+
+@layer utilities {
+  .glass-panel {
+    background-color: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.12);
+  }
+
+  .glass-panel-heavy {
+    background-color: rgba(255, 255, 255, 0.20);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border: 1px solid rgba(255, 255, 255, 0.30);
+    box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.18);
+  }
+
+  .glass-card-hover {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .glass-card-hover:hover {
+    background-color: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.40);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px 0 rgba(0, 0, 0, 0.15);
+  }
+
+  .kid-button {
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .kid-button:hover {
+    transform: scale(1.05) translateY(-2px);
+  }
+  .kid-button:active {
+    transform: scale(0.95) translateY(0);
+  }
+
+  .kid-card {
+    border-radius: 24px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+}
+
