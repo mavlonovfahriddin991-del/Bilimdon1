@@ -12,7 +12,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
+const distPath = path.resolve(process.cwd(), 'dist');
 
 app.use(express.json());
 
@@ -223,15 +225,17 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
-    app.get('*', (req, res) => {
+    app.use(express.static(distPath, { index: false }));
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api/') || req.path.includes('.')) {
+        return next();
+      }
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
+  app.listen(PORT, HOST, () => {
+    console.log(`Server running on http://${HOST}:${PORT}`);
   });
 }
 

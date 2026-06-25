@@ -17,6 +17,8 @@ import ShadowMatcher from './components/ShadowMatcher';
 import MiniGamesArcade from './components/MiniGamesArcade';
 import { Sparkles } from 'lucide-react';
 
+const STORAGE_KEY = 'zukko_kids_profile';
+
 const DEFAULT_PROFILE: UserProfile = {
   name: 'Zukko Bolajon',
   stars: 0,
@@ -24,6 +26,29 @@ const DEFAULT_PROFILE: UserProfile = {
   streak: 1,
   badges: [],
   lastActive: new Date().toISOString().split('T')[0],
+};
+
+const readStoredProfile = (): UserProfile | null => {
+  if (typeof window === 'undefined' || !window.localStorage) return null;
+
+  try {
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    if (!saved) return null;
+    return JSON.parse(saved) as UserProfile;
+  } catch (error) {
+    console.error('Failed to parse saved profile', error);
+    return null;
+  }
+};
+
+const writeStoredProfile = (profile: UserProfile) => {
+  if (typeof window === 'undefined' || !window.localStorage) return;
+
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+  } catch (error) {
+    console.error('Failed to save profile', error);
+  }
 };
 
 export default function App() {
@@ -52,43 +77,37 @@ export default function App() {
 
   // Load profile on mount
   useEffect(() => {
-    const saved = localStorage.getItem('zukko_kids_profile');
-    if (saved) {
-      try {
-        const loadedProfile = JSON.parse(saved) as UserProfile;
-        
-        // Streak calculation
-        const todayStr = new Date().toISOString().split('T')[0];
-        const lastActive = loadedProfile.lastActive;
-        
-        if (lastActive && lastActive !== todayStr) {
-          const lastActiveDate = new Date(lastActive);
-          const todayDate = new Date(todayStr);
-          const diffTime = Math.abs(todayDate.getTime() - lastActiveDate.getTime());
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-          
-          if (diffDays === 1) {
-            loadedProfile.streak += 1;
-          } else if (diffDays > 1) {
-            loadedProfile.streak = 1;
-          }
+    const savedProfile = readStoredProfile();
+
+    if (savedProfile) {
+      const todayStr = new Date().toISOString().split('T')[0];
+      const lastActive = savedProfile.lastActive;
+
+      if (lastActive && lastActive !== todayStr) {
+        const lastActiveDate = new Date(lastActive);
+        const todayDate = new Date(todayStr);
+        const diffTime = Math.abs(todayDate.getTime() - lastActiveDate.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) {
+          savedProfile.streak += 1;
+        } else if (diffDays > 1) {
+          savedProfile.streak = 1;
         }
-        
-        loadedProfile.lastActive = todayStr;
-        setProfile(loadedProfile);
-        localStorage.setItem('zukko_kids_profile', JSON.stringify(loadedProfile));
-      } catch (e) {
-        console.error('Failed to parse saved profile', e);
       }
+
+      savedProfile.lastActive = todayStr;
+      setProfile(savedProfile);
+      writeStoredProfile(savedProfile);
     } else {
-      localStorage.setItem('zukko_kids_profile', JSON.stringify(DEFAULT_PROFILE));
+      writeStoredProfile(DEFAULT_PROFILE);
     }
   }, []);
 
   const updateProfile = (updates: Partial<UserProfile>) => {
     setProfile(prev => {
       const updated = { ...prev, ...updates };
-      localStorage.setItem('zukko_kids_profile', JSON.stringify(updated));
+      writeStoredProfile(updated);
       return updated;
     });
   };
